@@ -56,7 +56,7 @@
                 nome:nome
             }
             titulo.textContent = nome
-            fetch('http://localhost:3000/log',{
+            fetch('https://reinosmongo.onrender.com/log',{
                 method:'POST',
                 headers:{
                     'Content-type':'application/json'
@@ -170,7 +170,7 @@
                 corText:corText,
                 corInput:corInput
             }
-           fetch('http://localhost:3000/salvar',{
+           fetch('https://reinosmongo.onrender.com/salvar',{
             method:'POST',
             headers:{
                 'Content-type':'application/json'
@@ -194,7 +194,7 @@
                 const formData = new FormData();
                 formData.append("nome",nome)
                 formData.append("imagem", file)
-                fetch('http://localhost:3000/salvarImagem',{
+                fetch('https://reinosmongo.onrender.com/salvarImagem',{
                     method:'POST',
                     body: formData
                 })

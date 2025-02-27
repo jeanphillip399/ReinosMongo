@@ -25,7 +25,7 @@
                 nome:nome,
                 senha:senha
             }
-            fetch('http://localhost:3000/users',{
+            fetch('https://reinosmongo.onrender.com/users',{
                 method:'POST',
                 headers:{
                     'Content-type':'application/json'
@@ -39,7 +39,7 @@
                 }
                 if(data.sucesso){
                     localStorage.setItem("nome", nome)
-                    window.location.href = 'http://localhost:3000/segunda'
+                    window.location.href = 'https://reinosmongo.onrender.com/segunda'
                 }
             })
         }
