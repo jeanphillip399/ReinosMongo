@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segunda</title>
+</head>
+<body>
+    <div id="pagina">
+    <h1 id="titulo"></h1>
+    <label for="corText">Cor dos Textos:</label>
+    <input type="color" id="corText">
+    <br>
+    <br>
+    <label for="corInput">Cor dos Campos:</label>
+    <input type="color" id="corInput">
+    <br>
+    <br>
+        <label for="populacao">População</label>
+        <div contenteditable="true" id="populacao"></div>
+        <br>
+        <label for="exercito">Exército</label>
+        <div contenteditable="true" id="exercito"></div>
+        <br>
+        <label for="felicidade">Felicidade</label>
+        <div contenteditable="true" id="felicidade"></div>
+        <br>
+        <label for="popularidade">Popularidade</label>
+        <div contenteditable="true" id="popularidade"></div>
+        <br>
+        <label for="lucro">Lucro</label>
+        <div contenteditable="true" id="lucro"></div>
+        <br>
+        <label for="banco">Banco</label>
+        <div contenteditable="true" id="banco"></div>
+        <br>
+        <label for="comida">Comida</label>
+        <div contenteditable="true" id="comida"></div>
+        <br>
+        <div id="containerBandeira">
+            <label for="imagem">Escolher Bandeira:</label>
+            <input type="file" id="imagem" style="opacity: 0;">
+        </div>
+        <br>
+        <div id="visual"></div>
+        <button onclick="salvar()">Salvar</button>
+    </div>
+    <script>
+        
+        //quando carrega a página:
+        document.addEventListener('DOMContentLoaded', function(){
+            
+            const nome = localStorage.getItem("nome")
+            const titulo = document.getElementById("titulo")
+            const query ={
+                nome:nome
+            }
+            titulo.textContent = nome
+            fetch('http://localhost:3000/log',{
+                method:'POST',
+                headers:{
+                    'Content-type':'application/json'
+                },
+                body:JSON.stringify(query)
+            })
+            .then(response=>response.json())
+            .then(data=>{
+                const populacao = document.getElementById("populacao")
+                const exercito = document.getElementById("exercito")
+                const felicidade = document.getElementById("felicidade")
+                const popularidade = document.getElementById("popularidade")
+                const lucro = document.getElementById("lucro")
+                const banco = document.getElementById("banco")
+                const comida = document.getElementById("comida")
+                const corText = document.getElementById("corText")
+                const corInput = document.getElementById("corInput")
+                //atribui os valores dos dados que vieram do back
+                populacao.textContent = data.populacao
+                exercito.textContent = data.exercito
+                felicidade.textContent = data.felicidade
+                popularidade.textContent = data.popularidade
+                lucro.textContent = data.lucro
+                banco.textContent = data.banco
+                comida.textContent = data.comida
+                corText.value = data.corText
+                corInput.value = data.corInput
+
+                //CONVERTENDO E PEGANDO IMAGEM DO BACK
+                const byteArray = Object.values(data.imagem)
+                const blob = new Blob([new Uint8Array(byteArray)],{type:"image/png"})
+                const url = URL.createObjectURL(blob)
+                document.body.style.backgroundImage = `url(${url})`
+                document.body.style.backgroundSize = 'cover'
+                document.body.style.backgroundPosition = 'center'
+
+                //atualiza cor dos TEXTOS quando a página é carregada
+                const titulo = document.getElementById('titulo')
+                let labels = document.querySelectorAll('label')
+                titulo.style.color = corText.value
+                labels.forEach(l=>{
+                    l.style.color = corText.value
+                })
+                //atualiza a cor dos INPUTS quando a página é carregada
+                let inputs = document.querySelectorAll('input')
+                const divs = document.querySelectorAll("[contenteditable]")
+                const divBandeira = document.getElementById("containerBandeira")
+                divBandeira.style.backgroundColor = corInput.value
+                divs.forEach(div=>{
+                    div.style.backgroundColor = corInput.value
+                    div.style.color = corText.value
+                })
+            })
+            
+        })
+        //trocando corText:
+        document.getElementById("corText").addEventListener('change', function(){
+            const titulo = document.getElementById('titulo')
+            let corText = document.getElementById("corText").value
+            let labels = document.querySelectorAll('label')
+            let divs = document.querySelectorAll('[contenteditable]')
+            titulo.style.color = corText
+            labels.forEach(l=>{
+                l.style.color = corText
+            })
+            divs.forEach(d=>{
+                d.style.color = corText
+            })
+        })
+        //trocando corInput:
+        document.getElementById("corInput").addEventListener('change', function(){
+            let corInput = document.getElementById("corInput").value
+            let inputs = document.querySelectorAll('input')
+            const divs = document.querySelectorAll("[contenteditable]")
+            const divBandeira = document.getElementById("containerBandeira")
+            divBandeira.style.backgroundColor = corInput
+            divs.forEach(div=>{
+                div.style.backgroundColor = corInput
+            })
+        })
+        document.getElementById("imagem").addEventListener('change', function(){
+            const imagem = document.getElementById("imagem")
+            const file = imagem.files[0]
+            const img = URL.createObjectURL(file)
+            document.body.style.backgroundImage = `url(${img})`
+            document.body.style.backgroundSize = 'cover'
+            document.body.style.backgroundPosition = 'center'
+        })
+        //salvar
+        function salvar(){  
+            const nome = localStorage.getItem("nome")
+            const populacao = document.getElementById("populacao").textContent
+            const exercito = document.getElementById("exercito").textContent
+            const felicidade = document.getElementById("felicidade").textContent
+            const popularidade = document.getElementById("popularidade").textContent
+            const lucro = document.getElementById("lucro").textContent
+            const banco = document.getElementById("banco").textContent
+            const comida = document.getElementById("comida").textContent
+            const corText = document.getElementById("corText").value
+            const corInput = document.getElementById("corInput").value
+            
+            const query ={
+                nome:nome,
+                populacao:populacao,
+                exercito:exercito,
+                felicidade:felicidade,
+                popularidade:popularidade,
+                lucro:lucro,
+                banco:banco,
+                comida:comida,
+                corText:corText,
+                corInput:corInput
+            }
+           fetch('http://localhost:3000/salvar',{
+            method:'POST',
+            headers:{
+                'Content-type':'application/json'
+            },
+            body:JSON.stringify(query)
+           })
+            .then(response=>response.json())
+            .then(data=>{
+                const pagina = document.getElementById('pagina')
+                const item = document.createElement('p')
+                item.textContent = data.menssagem
+                pagina.appendChild(item)
+                salvarImagem()
+            })
+        }
+        function salvarImagem(){
+            const nome = localStorage.getItem("nome")
+            const imgInput = document.getElementById('imagem')
+            const file = imgInput.files[0]
+            if(file){
+                const formData = new FormData();
+                formData.append("nome",nome)
+                formData.append("imagem", file)
+                fetch('http://localhost:3000/salvarImagem',{
+                    method:'POST',
+                    body: formData
+                })
+                .then(response=>response.json())
+                .then(data=>{
+
+                })
+            }
+        }
+    </script>
+    <style>
+        #pagina{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        div[contenteditable="true"]{
+            width: 20vw;
+            border: none;
+            border-radius: 20px;
+        }
+        #containerBandeira{
+            width: 10vw;
+            border: none;
+            border-radius: 20px;
+        }
+        #imagem{
+            width: 30px;
+        }
+    </style>
+</body>
+</html>
