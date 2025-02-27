@@ -21,7 +21,7 @@ app.get('/', async(req,res)=>{
 app.post('/users', async(req,res)=>{
     try{
         const {nome, senha} = req.body
-        const user = await prisma.user.findUnique({ 
+        const user = await prisma.user.findFirst({ 
             where:{
                 nome:nome,
                 senha:senha
