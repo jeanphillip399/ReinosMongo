@@ -40,6 +40,7 @@ app.post('/users', async(req,res)=>{
 app.get('/users', async (req,res)=>{
     try{
          const busca = await prisma.user.findMany()
+         res.json(busca)
     }
     catch(error){
         console.error("Erro ao buscar todos os registros")
