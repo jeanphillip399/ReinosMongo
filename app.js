@@ -100,4 +100,20 @@ app.post('/log',async(req,res)=>{
     const user = await prisma.user.findUnique({where:{nome}})
     res.json(user)
 })
+app.post('/create', async(req,res)=>{
+    const {nome, senha} = req.body;
+    try{
+        const create = await prisma.user.create({
+            data:{
+                nome:nome,
+                senha:senha
+            },
+        })
+        console.log('Registro criado com sucesso!!!', create)
+    }
+    catch(error){
+        console.error('Erro ao criar novo registro')
+        res.json(error)
+    }
+})
 
