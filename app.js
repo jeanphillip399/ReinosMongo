@@ -37,6 +37,14 @@ app.post('/users', async(req,res)=>{
     }
     catch(error){console.error('Busca interrompida :C')}
 })
+app.get('/users', async (req,res)=>{
+    try{
+         const busca = await prisma.user.findMany()
+    }
+    catch(error){
+        console.error("Erro ao buscar todos os registros")
+    }
+})
 app.get('/segunda',(req,res)=>{
     res.sendFile(path.join(__dirname,"html", "segunda.html"))
 })
